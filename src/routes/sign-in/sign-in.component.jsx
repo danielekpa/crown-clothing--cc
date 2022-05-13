@@ -1,40 +1,80 @@
 import React, { Component, Fragment } from 'react'
+import { Link } from 'react-router-dom';
+import Button from '../../components/button/button.component';
+import FormInput from '../../components/form-input/form-input.component';
+import SignUp from '../../components/sign-up/sign-up.component';
 import { signInWithGooglePopup, createUserDocFromAuth } from '../../utils/firebase.util';
+import { handleChange } from '../../utils/handle-input-change.util';
+import './sign-in.styles.scss'
 
 
 export default class SignIn extends Component {
+  constructor() {
+    super();
+    this.initState = {
+      email: "",
+      password: "",
+    };
+    this.state = {
+      ...this.initState,
+    }
+    this.handleChange = handleChange.bind(this);
+  }
+
+  destructureUser = (res) => {
+    const { user } = res;
+    return user
+  }
 
   logGoogleUser = async () => {
-
     const response = await signInWithGooglePopup();
-    console.log(response);  
-    await createUserDocFromAuth(response.user);
-    /* .then((result) => {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      const credential = GoogleAuthProvider.credentialFromResult(result);
-      const token = credential.accessToken;
-      // The signed-in user info.
-      const user = result.user;
-      // ...
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.email;
-      // The AuthCredential type that was used.
-      const credential = GoogleAuthProvider.credentialFromError(error);
-      // ...
-    })
-      ; */
+    console.log(response);
+    const userDocRef = await createUserDocFromAuth(this.destructureUser(response));
   }
-  render() {
-    return (
-      <Fragment>
 
-        <h1>Sign In page</h1>
-        <button onClick={this.logGoogleUser}>Sign in with Google</button>
-      </Fragment>
+  render() {
+
+    const { email, password } = this.state;
+    return (
+      <div className="sign-in-container">
+        <h2>Sign in to your account</h2>
+        <form className="sign-in-form" >
+          <FormInput
+            label="Email"
+            type="email"
+            required
+            onChange={this.handleChange}
+            name="email"
+            value={email}
+          />
+          <FormInput
+            label="Password"
+            type="password"
+            required
+            onChange={this.handleChange}
+            name="password"
+            value={password}
+          />
+        </form>
+
+        <div className="signIn-button-container">
+          <Button type="submit">Sign In</Button>
+          <Button type='submit' buttonType="google" onClick={this.logGoogleUser}>Sign in with Google</Button>
+        </div>
+
+        <p className="sign-redirect-text"> Don't have an account?  <Link className="sign-redirect-link" to={'/sign-up'}>Sign Up</Link></p>
+      </div>
     )
   }
 }
+
+
+/*  async componentDidMount() {
+     const response = await getRedirectResult(auth);
+     // console.log(response);
+     if (response) {
+       const userDocRef = await createUserDocFromAuth(this.destructureUser(response));
+     }
+   } */
+
+// {/* <button onClick={signInWithGoogleRedirect}>Sign in with Google redireect</button> */ }

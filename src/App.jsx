@@ -6,6 +6,7 @@ import PropTypes from "prop-types";
 import Navigation from "./routes/navigation/navigation.component";
 import {Route} from "react-router";
 import SignIn from "./routes/sign-in/sign-in.component";
+import SignUp from "./components/sign-up/sign-up.component";
 
 class App extends Component {
   render() {
@@ -16,6 +17,7 @@ class App extends Component {
           <Route exact path="/" component={Home} />
           <Route path="/shop" render={() => <Shop />} />
           <Route exact path="/sign-in" component={SignIn} />
+          <Route exact path="/sign-up" component={SignUp} />
         </Switch>
       </Fragment>
     );
