@@ -1,6 +1,6 @@
 .button {
   min-width: 165px;
-  width: 100%;
+  width: auto;
   height: 50px;
   letter-spacing: 0.5px;
   line-height: 50px;
@@ -31,6 +31,10 @@
       background-color: #357ae8;
       border: none;
     }
+  }
+
+  &.signUp {
+    margin: 0 auto;
   }
 
   &.inverted {

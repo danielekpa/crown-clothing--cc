@@ -14,10 +14,9 @@ const BUTTON_TYPE_CLASSES = {
 
 export class Button extends Component {
   render() {
-    // console.log(children, buttonType, ...otherProps);
     const { children, buttonType, ...otherProps } = this.props
     return (
-      <button className={`button ${BUTTON_TYPE_CLASSES[buttonType]}`} {...otherProps}>
+      <button className={`button ${BUTTON_TYPE_CLASSES[buttonType] ? BUTTON_TYPE_CLASSES[buttonType] : buttonType}`} {...otherProps}>
         {children}
       </button>
     )

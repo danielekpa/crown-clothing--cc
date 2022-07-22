@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from 'firebase/auth';
 import { async } from "@firebase/util";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -28,6 +28,12 @@ googleProvider.setCustomParameters({
   // prompt: 'select_account',
 });
 
+export const checkIfUSerExists = async (userAuth) => {
+  const userDocRef = doc(dB, 'users', userAuth.uid);
+  // console.log(userAuth.uid);
+  console.log(auth.currentUser);
+  return await getDoc(userDocRef);
+}
 
 export const auth = getAuth(firebaseApp);
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
@@ -37,8 +43,7 @@ export const dB = getFirestore(firebaseApp);
 
 export const createUserDocFromAuth = async function (userAuth, additionalParams) {
   if (!userAuth) return
-  const userDocRef = doc(dB, 'users', userAuth.uid);
-  const userSnapShot = await getDoc(userDocRef);
+  const userSnapShot = await checkIfUSerExists(userAuth);
   console.log("User exist: ", userSnapShot.exists());
 
   if (!userSnapShot.exists()) {
@@ -60,11 +65,21 @@ export const createUserDocFromAuth = async function (userAuth, additionalParams)
       console.log("Error creating user", error.message);
     }
   }
-
   return userSnapShot;
 }
+
+
 
 export const createAuthUserWithEmailAndPassword = async (email, password) => {
   if (!email || !password) return;
   return createUserWithEmailAndPassword(auth, email, password)
 };
+
+export const signInAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const deleteAuthUser = async (currentUser) => {
+  return deleteUser(currentUser)
+}

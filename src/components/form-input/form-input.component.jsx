@@ -9,7 +9,7 @@ export class FormInput extends Component {
         <input className="form-input" {...inputOptions} />
         {label && (
           <label
-            className={`form-input-label ${inputOptions.value.length ? "shrink" : ""
+            className={`form-input-label ${inputOptions.value ? "shrink" : ""
               } `}
           >
             {label}

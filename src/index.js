@@ -3,8 +3,9 @@ import ReactDOM from "react-dom/client";
 import "./index.scss";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-import App from "./App";
-import { Router } from "react-router-dom";
+// import App from "./App";
+import AppWithRouter from "./App";
+// import { Router } from "react-router-dom";
 import { createBrowserHistory } from 'history';
 
 const history = createBrowserHistory();
@@ -12,9 +13,9 @@ const history = createBrowserHistory();
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter >
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <AppWithRouter />
+    {/* </React.StrictMode> */}
   </BrowserRouter>
 );
 
