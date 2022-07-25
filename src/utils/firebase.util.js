@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from 'firebase/auth';
-import { async } from "@firebase/util";
+// import { async } from "@firebase/util";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -37,6 +37,7 @@ export const checkIfUSerExists = async (userAuth) => {
 
 export const auth = getAuth(firebaseApp);
 export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
+
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const dB = getFirestore(firebaseApp);

@@ -1,15 +1,15 @@
-import { updateProfile } from "firebase/auth";
-import React, { Component, Fragment } from "react";
+import {updateProfile} from "firebase/auth";
+import React, {Component, Fragment} from "react";
 import {
   auth,
   createAuthUserWithEmailAndPassword,
   createUserDocFromAuth,
 } from "../../../utils/firebase.util";
 import FormInput from "../../../components/form-input/form-input.component";
-import { handleChange } from "../../../utils/handle-input-change.util";
+import {handleChange} from "../../../utils/handle-input-change.util";
 import "./sign-up.styles.scss";
 import Button from "../../../components/button/button.component";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 export class SignUp extends Component {
   constructor() {
@@ -22,6 +22,7 @@ export class SignUp extends Component {
     };
     this.state = {
       ...this.initState,
+      errorMessage: "",
     };
     this.handleChange = handleChange.bind(this);
   }
@@ -34,7 +35,7 @@ export class SignUp extends Component {
 
   signUpUserHandler = async (event) => {
     event.preventDefault();
-    const { displayName, email, password, confirmPassword } = this.state;
+    const {displayName, email, password, confirmPassword} = this.state;
 
     if (!password || password !== confirmPassword) {
       alert("Passwords do not match");
@@ -46,17 +47,18 @@ export class SignUp extends Component {
         email,
         password
       );
-      const { user } = userCredential;
-      const userDocRef = await createUserDocFromAuth(user, { displayName });
-      this.setState({ ...this.initState });
+      const {user} = userCredential;
+      const userDocRef = await createUserDocFromAuth(user, {displayName});
+      this.setState({...this.initState});
     } catch (error) {
+      this.setState({errorMessage: error.message});
       console.log("Error signing up, ", error);
     }
   };
 
   render() {
-    const { state, handleChange, signUpUserHandler } = this;
-    const { displayName, email, password, confirmPassword } = state;
+    const {state, handleChange, signUpUserHandler} = this;
+    const {displayName, email, password, confirmPassword, errorMessage} = state;
     return (
       <Fragment>
         <div className="sign-up-container">
@@ -100,11 +102,20 @@ export class SignUp extends Component {
               onChange={handleChange}
               name="confirmPassword"
               value={confirmPassword}
+              errorLabel={errorMessage}
             />
 
-            <Button buttonType="signUp" type="submit">Sign Up to Crown Clothing</Button>
+            <Button buttonType="signUp" type="submit">
+              Sign Up to Crown Clothing
+            </Button>
           </form>
-          <p className="signin-redirect-text"> Already have an account?  <Link className="signin-redirect-link" to={'/auth/sign-in'}>&nbsp;Sign In</Link></p>
+          <p className="signin-redirect-text">
+            {" "}
+            Already have an account?{" "}
+            <Link className="signin-redirect-link" to={"/auth/sign-in"}>
+              &nbsp;Sign In
+            </Link>
+          </p>
         </div>
       </Fragment>
     );
