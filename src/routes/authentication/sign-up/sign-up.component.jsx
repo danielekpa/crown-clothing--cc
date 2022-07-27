@@ -1,7 +1,5 @@
-import {updateProfile} from "firebase/auth";
 import React, {Component, Fragment} from "react";
 import {
-  auth,
   createAuthUserWithEmailAndPassword,
   createUserDocFromAuth,
 } from "../../../utils/firebase.util";
@@ -10,8 +8,11 @@ import {handleChange} from "../../../utils/handle-input-change.util";
 import "./sign-up.styles.scss";
 import Button from "../../../components/button/button.component";
 import {Link} from "react-router-dom";
+import {UserContext} from "../../../contexts/user.context";
+import {Oval} from "react-loader-spinner";
 
 export class SignUp extends Component {
+  static contextType = UserContext;
   constructor() {
     super();
     this.initState = {
@@ -22,18 +23,14 @@ export class SignUp extends Component {
     };
     this.state = {
       ...this.initState,
-      errorMessage: "",
+      loading: false,
+      error: "",
     };
     this.handleChange = handleChange.bind(this);
   }
 
-  /* handleChange(event) {
-    event.preventDefault();
-    const {name, value} = event.target;
-    this.setState((prevState) => ({...prevState, [name]: value}));
-  } */
-
   signUpUserHandler = async (event) => {
+    this.setState({error: false, loading: true});
     event.preventDefault();
     const {displayName, email, password, confirmPassword} = this.state;
 
@@ -48,21 +45,21 @@ export class SignUp extends Component {
         password
       );
       const {user} = userCredential;
-      const userDocRef = await createUserDocFromAuth(user, {displayName});
-      this.setState({...this.initState});
+      await createUserDocFromAuth(user, {displayName});
+      this.setState({...this.initState, loading: false});
     } catch (error) {
-      this.setState({errorMessage: error.message});
+      this.setState({error, loading: false});
       console.log("Error signing up, ", error);
     }
   };
 
   render() {
     const {state, handleChange, signUpUserHandler} = this;
-    const {displayName, email, password, confirmPassword, errorMessage} = state;
+    const {displayName, email, password, confirmPassword, error, loading} =
+      state;
     return (
       <Fragment>
         <div className="sign-up-container">
-          {/* <h2>Don't have an account?</h2> */}
           <h2>Create an account</h2>
           <span>Sign up with your email and password</span>
           <form className="sign-up-form" onSubmit={signUpUserHandler}>
@@ -102,24 +99,42 @@ export class SignUp extends Component {
               onChange={handleChange}
               name="confirmPassword"
               value={confirmPassword}
-              errorLabel={errorMessage}
+              error={error}
             />
-
-            <Button buttonType="signUp" type="submit">
-              Sign Up to Crown Clothing
-            </Button>
           </form>
-          <p className="signin-redirect-text">
-            {" "}
-            Already have an account?{" "}
-            <Link className="signin-redirect-link" to={"/auth/sign-in"}>
-              &nbsp;Sign In
-            </Link>
-          </p>
+          {loading ? (
+            <Oval
+              color="#00BFFF"
+              height={45}
+              width={45}
+              radius="9"
+              ariaLabel="three-dots-loading"
+              wrapperStyle
+              wrapperClass
+            />
+          ) : (
+            <>
+              <Button
+                buttonType="signUp"
+                type="submit"
+                onClick={signUpUserHandler}
+              >
+                Sign Up to Crown Clothing
+              </Button>
+              <p className="signin-redirect-text">
+                {" "}
+                Already have an account?{" "}
+                <Link className="signin-redirect-link" to={"/auth/sign-in"}>
+                  &nbsp;Sign In
+                </Link>
+              </p>
+            </>
+          )}
         </div>
       </Fragment>
     );
   }
 }
+SignUp.contextType = UserContext;
 
 export default SignUp;

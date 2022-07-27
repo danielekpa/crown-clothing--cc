@@ -6,18 +6,23 @@ import { BrowserRouter } from "react-router-dom";
 // import App from "./App";
 import AppWithRouter from "./App";
 // import { Router } from "react-router-dom";
-import { createBrowserHistory } from 'history';
+// import { createBrowserHistory } from 'history';
+import { UserContextProvider } from "./contexts/user.context";
 
-const history = createBrowserHistory();
+// const history = createBrowserHistory();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter >
-    {/* <React.StrictMode> */}
-    <AppWithRouter />
-    {/* </React.StrictMode> */}
+  <BrowserRouter>
+    <UserContextProvider>
+      <AppWithRouter />
+    </UserContextProvider>
   </BrowserRouter>
 );
+
+
+// {/* </React.StrictMode> */ }
+// {/* <React.StrictMode> */ }
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

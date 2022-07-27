@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser } from 'firebase/auth';
+import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser, onAuthStateChanged } from 'firebase/auth';
 // import { async } from "@firebase/util";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -31,7 +31,7 @@ googleProvider.setCustomParameters({
 export const checkIfUSerExists = async (userAuth) => {
   const userDocRef = doc(dB, 'users', userAuth.uid);
   // console.log(userAuth.uid);
-  console.log(auth.currentUser);
+  // console.log(auth.currentUser);
   return await getDoc(userDocRef);
 }
 
@@ -84,3 +84,7 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 export const deleteAuthUser = async (currentUser) => {
   return deleteUser(currentUser)
 }
+
+export const signOutUSer = async (currentUser) => signOut(auth);
+
+export const onAuthStateListener = async (callback) => onAuthStateChanged(auth, callback);

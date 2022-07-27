@@ -1,21 +1,21 @@
-import React, {Component, Fragment} from "react";
+import React, {Component} from "react";
 import {Link} from "react-router-dom";
 import Button from "../../../components/button/button.component";
+import {Oval} from "react-loader-spinner";
 import FormInput from "../../../components/form-input/form-input.component";
-import SignUp from "../sign-up/sign-up.component";
+import {UserContext} from "../../../contexts/user.context";
 import {
   signInWithGooglePopup,
   createUserDocFromAuth,
   checkIfUSerExists,
-  auth,
   signInAuthUserWithEmailAndPassword,
   deleteAuthUser,
 } from "../../../utils/firebase.util";
 import {handleChange} from "../../../utils/handle-input-change.util";
-// import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import "./sign-in.styles.scss";
 
 export default class SignIn extends Component {
+  static contextType = UserContext;
   constructor() {
     super();
     this.initState = {
@@ -24,9 +24,22 @@ export default class SignIn extends Component {
     };
     this.state = {
       ...this.initState,
+      loading: false,
       error: "",
     };
     this.handleChange = handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    /* let value = this.context;
+    console.log(value); */
+    /* perform a side-effect at mount using the value of MyContext */
+  }
+
+  componentDidUpdate() {
+    /*  let value = this.context;
+    console.log(value, this.state.loading); */
+    /* ... */
   }
 
   destructureUser = (res) => {
@@ -37,13 +50,15 @@ export default class SignIn extends Component {
   logGoogleUser = async () => {
     try {
       const response = await signInWithGooglePopup();
-      return await createUserDocFromAuth(this.destructureUser(response));
+      await createUserDocFromAuth(this.destructureUser(response));
+      return;
     } catch (error) {
       console.log(error, error.message);
     }
   };
 
-  logUser = async () => {
+  handleUserLogin = async () => {
+    this.setState({error: false, loading: true});
     try {
       const {email, password} = this.state;
       // console.log(email, password);
@@ -54,29 +69,28 @@ export default class SignIn extends Component {
       const {user} = userCredential;
       // console.l og(user);
       const userDocRef = await checkIfUSerExists(user);
+      this.setState({
+        ...this.initState,
+        loading: false,
+      });
       if (!userDocRef.exists()) {
         await deleteAuthUser(user);
         return alert("User does not exist");
       }
-      // console.log(userDocRef.data());
-
-      this.state = {
-        ...this.initState,
-      };
     } catch (error) {
       const errorCode = error.code;
-      this.setState({error});
       console.log("Error code", errorCode);
+      this.setState({error, loading: false});
       // console.log("Failed", error);
     }
   };
 
   render() {
-    const {email, password, error} = this.state;
+    const {email, password, error, loading} = this.state;
     return (
       <div className="sign-in-container">
         <h2>Sign in to your account</h2>
-        <form className="sign-in-form" onSubmit={this.logUser}>
+        <form className="sign-in-form" onSubmit={this.handleUserLogin}>
           <FormInput
             label="Email"
             type="email"
@@ -97,16 +111,30 @@ export default class SignIn extends Component {
           {/* <ErrorLabel errorLabel={errorMessage} /> */}
         </form>
 
-        <div className="signIn-button-container">
-          <Button type="submit">Sign In</Button>
-          <Button
-            type="button"
-            buttonType="google"
-            onClick={this.logGoogleUser}
-          >
-            Sign in with Google
-          </Button>
-        </div>
+        {loading ? (
+          <Oval
+            color="#00BFFF"
+            height={45}
+            width={45}
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle
+            wrapperClass
+          />
+        ) : (
+          <div className="signIn-button-container">
+            <Button type="submit" onClick={this.handleUserLogin}>
+              Sign In
+            </Button>
+            <Button
+              type="button"
+              buttonType="google"
+              onClick={this.logGoogleUser}
+            >
+              Sign in with Google
+            </Button>
+          </div>
+        )}
 
         <p className="signup-redirect-text">
           {" "}
@@ -119,6 +147,8 @@ export default class SignIn extends Component {
     );
   }
 }
+
+SignIn.contextType = UserContext;
 
 /*  async componentDidMount() {
      const response = await getRedirectResult(auth);

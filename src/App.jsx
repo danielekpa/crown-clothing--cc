@@ -1,14 +1,11 @@
 import React, {Component, Fragment} from "react";
 import {Switch} from "react-router";
 import Home from "./routes/home/home.component";
-import PropTypes from "prop-types";
 import {withRouter} from "react-router";
 import Navigation from "./routes/navigation/navigation.component";
 import {Route, Redirect} from "react-router";
 import SignIn from "./routes/authentication/sign-in/sign-in.component";
 import SignUp from "./routes/authentication/sign-up/sign-up.component";
-import Authentication from "./routes/authentication/authentication.component";
-import routeAuthentication from "./routes/authentication/authentication.component";
 
 class App extends Component {
   render() {

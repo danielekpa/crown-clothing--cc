@@ -18,6 +18,12 @@ export class FormInput extends Component {
       case "auth/invalid-email":
         errorMessage = "Invalid email provided";
         break;
+      case "auth/email-already-in-use":
+        errorMessage = "Email exists already";
+        break;
+      case "auth/network-request-failed":
+        errorMessage = "Invalid email provided";
+        break;
       default:
         errorMessage = error?.message;
     }
