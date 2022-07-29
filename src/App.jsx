@@ -1,11 +1,11 @@
 import React, {Component, Fragment} from "react";
-import {Switch} from "react-router";
+import {Route, Redirect, Switch, withRouter} from "react-router";
 import Home from "./routes/home/home.component";
-import {withRouter} from "react-router";
 import Navigation from "./routes/navigation/navigation.component";
-import {Route, Redirect} from "react-router";
 import SignIn from "./routes/authentication/sign-in/sign-in.component";
 import SignUp from "./routes/authentication/sign-up/sign-up.component";
+import Shop from "./routes/shop/shop.component";
+import NavigationContextConsumer from "./routes/navigation/navigation.context.consumer";
 
 class App extends Component {
   render() {
@@ -13,7 +13,7 @@ class App extends Component {
     const {location} = this.props;
     return (
       <Fragment>
-        <Navigation />
+        <NavigationContextConsumer />
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/shop" render={() => <Shop />} />
@@ -31,15 +31,6 @@ class App extends Component {
       //         Test 2
       //       </Link>}
     );
-  }
-}
-
-class Shop extends Component {
-  componentDidMount() {
-    // console.log("I don land");
-  }
-  render() {
-    return <h1>The Shop Page.</h1>;
   }
 }
 

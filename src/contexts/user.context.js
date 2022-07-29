@@ -21,7 +21,6 @@ export class UserContextProvider extends Component {
 
   componentDidMount() {
     const unsubscribe = onAuthStateListener((user) => {
-      console.log(user);
       this.setCurrentUser(user)
     });
     return unsubscribe;

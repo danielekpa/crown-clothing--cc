@@ -2,8 +2,9 @@ import React, {Component, Fragment} from "react";
 import {Link} from "react-router-dom";
 import "./navigation.styles.scss";
 import {ReactComponent as CrownLogo} from "../../assets/crown.svg";
-import {UserContext} from "../../contexts/user.context";
 import {signOutUSer} from "../../utils/firebase.util";
+import CartIcon from "../../components/cart-icon/cart-icon.component";
+import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
 
 export default class Navigation extends Component {
   signOutHandler = async () => {
@@ -11,6 +12,7 @@ export default class Navigation extends Component {
   };
 
   render() {
+    const {user, cart} = this.props;
     return (
       <Fragment>
         <div className="navigation">
@@ -24,7 +26,7 @@ export default class Navigation extends Component {
             <Link className="nav-link" to="/contact">
               Contact
             </Link>
-            {this.context.currentUser ? (
+            {user.currentUser ? (
               <span className="nav-link" onClick={signOutUSer}>
                 SIGN OUT
               </span>
@@ -36,16 +38,11 @@ export default class Navigation extends Component {
             <Link className="nav-link" to="/cart">
               Cart
             </Link>
-            {/* <Link to={location => ({ ...location, pathname: "/courses" })} >
-              Test1
-            </Link> */}
-            {/* <Link to={location => `${location.pathname}?sort=name`}>
-              Test 2
-            </Link> */}
+            <CartIcon />
           </div>
+          {cart.isCartOpen && <CartDropdown />}
         </div>
       </Fragment>
     );
   }
 }
-Navigation.contextType = UserContext;

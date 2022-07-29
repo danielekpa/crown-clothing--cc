@@ -1,21 +1,21 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.scss";
-// import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
-// import App from "./App";
 import AppWithRouter from "./App";
-// import { Router } from "react-router-dom";
-// import { createBrowserHistory } from 'history';
 import { UserContextProvider } from "./contexts/user.context";
-
-// const history = createBrowserHistory();
+import { ProductsContextProvider } from "./contexts/products.context";
+import CartContextProvider from "./contexts/cart.context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <UserContextProvider>
-      <AppWithRouter />
+      <ProductsContextProvider>
+        <CartContextProvider>
+          <AppWithRouter />
+        </CartContextProvider>
+      </ProductsContextProvider>
     </UserContextProvider>
   </BrowserRouter>
 );
