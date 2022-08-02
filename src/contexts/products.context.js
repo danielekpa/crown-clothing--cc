@@ -15,18 +15,12 @@ export class ProductsContextProvider extends Component {
     }
   }
 
-  // setProducts = (products) => {
-  //   this.setState({ products })
-  // }
-
   componentDidMount() {
-    // this.setProducts(PRODUCTS)
   }
 
   render() {
     const { children } = this.props;
     const { products } = this.state;
-    // const { setProducts } = this;
     const value = { products };
     return <ProductsContext.Provider value={value}>
       {children}

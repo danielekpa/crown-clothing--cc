@@ -6,6 +6,7 @@ import SignIn from "./routes/authentication/sign-in/sign-in.component";
 import SignUp from "./routes/authentication/sign-up/sign-up.component";
 import Shop from "./routes/shop/shop.component";
 import NavigationContextConsumer from "./routes/navigation/navigation.context.consumer";
+import Checkout from "./routes/checkout/checkout.component";
 
 class App extends Component {
   render() {
@@ -22,6 +23,7 @@ class App extends Component {
           </Route>
           <Route exact path={redirectPath} component={SignIn} />
           <Route exact path="/auth/sign-up" component={SignUp} />
+          <Route path="/checkout" component={Checkout} />
         </Switch>
       </Fragment>
       // {<Link to={location => ({ ...location, pathname: "/courses" })} >
