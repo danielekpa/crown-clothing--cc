@@ -1,0 +1,16 @@
+@use "../../utils/styles.util" as util;
+
+.shop-category {
+  .title {
+    @include util.categoryTitle();
+    font-size: 38px;
+    text-align: center;
+    // margin-bottom: 20px;
+  }
+  .shop-category-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    column-gap: 20px;
+    row-gap: 50px;
+  }
+}

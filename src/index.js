@@ -4,18 +4,18 @@ import "./index.scss";
 import { BrowserRouter } from "react-router-dom";
 import AppWithRouter from "./App";
 import { UserContextProvider } from "./contexts/user.context";
-import { ProductsContextProvider } from "./contexts/products.context";
+import { CategoriesContextProvider } from "./contexts/categories.context";
 import CartContextProvider from "./contexts/cart.context";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <UserContextProvider>
-      <ProductsContextProvider>
+      <CategoriesContextProvider>
         <CartContextProvider>
           <AppWithRouter />
         </CartContextProvider>
-      </ProductsContextProvider>
+      </CategoriesContextProvider>
     </UserContextProvider>
   </BrowserRouter>
 );

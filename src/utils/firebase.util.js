@@ -1,11 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, doc, getDoc, setDoc } from 'firebase/firestore';
+import { getFirestore, collection, doc, getDoc, setDoc, writeBatch, query, getDocs } from 'firebase/firestore';
 import { getAuth, signInWithRedirect, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, deleteUser, onAuthStateChanged } from 'firebase/auth';
-// import { async } from "@firebase/util";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,8 +26,7 @@ googleProvider.setCustomParameters({
 
 export const checkIfUSerExists = async (userAuth) => {
   const userDocRef = doc(dB, 'users', userAuth.uid);
-  // console.log(userAuth.uid);
-  // console.log(auth.currentUser);
+
   return await getDoc(userDocRef);
 }
 
@@ -41,6 +36,33 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider)
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, googleProvider);
 
 export const dB = getFirestore(firebaseApp);
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(dB, collectionKey);
+  const batch = writeBatch(dB);
+
+  objectsToAdd.forEach(obj => {
+    const docRef = doc(collectionRef, obj.title.toLowerCase());
+    batch.set(docRef, obj);
+  });
+
+  await batch.commit();
+  console.log('Done');
+}
+
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(dB, 'categories');
+  const q = query(collectionRef);
+
+  const querySnapshot = await getDocs(q);
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapShot) => {
+    const { title, items } = docSnapShot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+
+  return categoryMap;
+}
 
 export const createUserDocFromAuth = async function (userAuth, additionalParams) {
   if (!userAuth) return
@@ -54,8 +76,9 @@ export const createUserDocFromAuth = async function (userAuth, additionalParams)
     const createdAt = new Date();
     console.log("No such document!");
     try {
-      const usersRef = collection(dB, "users");
-      await setDoc(doc(usersRef, userAuth.uid), {
+      // const usersDocRef = collection(dB, "users");
+      const usersDocRef = doc(dB, 'users', userAuth.uid);
+      await setDoc(usersDocRef, {
         uid,
         displayName,
         email,

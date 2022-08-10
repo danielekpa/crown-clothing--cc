@@ -1,21 +1,37 @@
 import React, {Component} from "react";
-import ProductCard from "../../components/product-card/product-card.component";
-import {ProductsContext} from "../../contexts/products.context";
+import {Switch, Route} from "react-router-dom";
+import CategoryPreview from "../../components/category-preview/category-preview.component";
+import {CategoriesContext} from "../../contexts/categories.context";
+import ShopCategory from "../shop-category/shop-category.component";
 import "./shop.styles.scss";
 
 class Shop extends Component {
-  componentDidMount() {
-    // console.log("I don land");
-  }
+  componentDidMount() {}
+
+  renderCategoryPreview = (productCategory) => {};
   render() {
+    const {match} = this.props;
+    const {categoriesMap} = this.context;
+
     return (
-      <div className="products-container">
-        {this.context.products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+      <Switch>
+        <Route exact path={match.path}>
+          {Object.keys(categoriesMap).map((title) => {
+            return (
+              <CategoryPreview
+                path={match.path}
+                key={title}
+                title={title}
+                products={categoriesMap[title]}
+              />
+            );
+          })}
+        </Route>
+        <Route path={`${match.path}/:category`} component={ShopCategory} />
+      </Switch>
     );
   }
 }
-Shop.contextType = ProductsContext;
+
+Shop.contextType = CategoriesContext;
 export default Shop;
